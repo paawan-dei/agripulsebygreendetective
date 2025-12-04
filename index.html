@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriPulse — The Green Detective</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <div class="logo-container">
+            <img src="assets/team_logo.png" alt="AgriPulse Logo" class="header-logo">
+            <span class="header-title">AgriPulse</span>
+        </div>
+        <nav class="main-nav">
+            <button class="nav-btn active" data-target="home">Home</button>
+            <button class="nav-btn" data-target="analyzer">Analyzer</button>
+            <button class="nav-btn" data-target="results">Results</button>
+            <button class="nav-btn" data-target="global-data">Global Data</button>
+            <button class="nav-btn" data-target="feedback">Feedback</button>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content">
+
+        <!-- 1. Home Page -->
+        <section id="home" class="page-section active">
+            <div class="hero-content">
+                <img src="assets/team_logo.png" alt="Team Logo" class="hero-logo">
+                <h1 class="hero-title">AgriPulse — The Green Detective</h1>
+                <div class="tagline-container">
+                    <span id="typed-tagline"></span><span class="cursor">|</span>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" id="google-search" placeholder="Search sustainable agriculture...">
+                    <button id="search-btn">Search</button>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="cta-btn primary" onclick="navigateTo('analyzer')">Open Analyzer</button>
+                    <button class="cta-btn secondary" onclick="scrollToInfo()">About</button>
+                </div>
+
+                <div class="info-cards-container" id="info-cards">
+                    <div class="info-card">
+                        <h3>Objectives</h3>
+                        <p>To provide precise, data-driven soil analysis for sustainable farming, optimizing nutrient
+                            balance and crop yield through advanced diagnostics.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Procedure</h3>
+                        <p>Input soil parameters, analyze against global and local standards, receive AI-driven
+                            classification, and get actionable recommendations.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Analyzer Page -->
+        <section id="analyzer" class="page-section">
+            <h2 class="section-title">Soil Intelligence Analyzer</h2>
+
+            <div class="analyzer-grid">
+                <!-- A. Presets -->
+                <div class="card preset-card">
+                    <h3>Load Preset</h3>
+                    <select id="preset-selector">
+                        <option value="manual">Manual Entry</option>
+                        <option value="dayalbagh">Dayalbagh Soil (Reference)</option>
+                        <option value="global">Global Reference Soil</option>
+                    </select>
+                </div>
+
+                <!-- B. Input Parameters (Split into Reference & Sample) -->
+                <div class="card input-card full-span">
+                    <h3>Data Entry</h3>
+                    <div class="dual-input-container">
+                        <!-- Reference Standards Column -->
+                        <div class="input-column">
+                            <h4 class="sub-header">Reference Standards (Range)</h4>
+
+                            <div class="input-row">
+                                <label>Phosphorus (P) [kg/ha]</label>
+                                <div class="range-inputs">
+                                    <input type="number" id="ref-p-min" placeholder="Min" class="small-input">
+                                    <span class="separator">-</span>
+                                    <input type="number" id="ref-p-max" placeholder="Max" class="small-input">
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <label>Sulfur (S) [ppm]</label>
+                                <div class="range-inputs">
+                                    <input type="number" id="ref-s-min" placeholder="Min" class="small-input">
+                                    <span class="separator">-</span>
+                                    <input type="number" id="ref-s-max" placeholder="Max" class="small-input">
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <label>Potassium (K) [kg/ha]</label>
+                                <div class="range-inputs">
+                                    <input type="number" id="ref-k-min" placeholder="Min" class="small-input">
+                                    <span class="separator">-</span>
+                                    <input type="number" id="ref-k-max" placeholder="Max" class="small-input">
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <label>Calcium (Ca) [meq/100g]</label>
+                                <div class="range-inputs">
+                                    <input type="number" id="ref-ca-min" placeholder="Min" class="small-input">
+                                    <span class="separator">-</span>
+                                    <input type="number" id="ref-ca-max" placeholder="Max" class="small-input">
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <label>pH Level</label>
+                                <div class="range-inputs">
+                                    <input type="number" id="ref-ph-min" step="0.1" placeholder="Min"
+                                        class="small-input">
+                                    <span class="separator">-</span>
+                                    <input type="number" id="ref-ph-max" step="0.1" placeholder="Max"
+                                        class="small-input">
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <label>EC [dS/m]</label>
+                                <div class="range-inputs">
+                                    <input type="number" id="ref-ec-min" step="0.01" placeholder="Min"
+                                        class="small-input">
+                                    <span class="separator">-</span>
+                                    <input type="number" id="ref-ec-max" step="0.01" placeholder="Max"
+                                        class="small-input">
+                                </div>
+                            </div>
+
+                            <div class="input-row">
+                                <label>Organic Carbon (OC) [%]</label>
+                                <div class="range-inputs">
+                                    <input type="number" id="ref-oc-min" step="0.01" placeholder="Min"
+                                        class="small-input">
+                                    <span class="separator">-</span>
+                                    <input type="number" id="ref-oc-max" step="0.01" placeholder="Max"
+                                        class="small-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sample Data Column -->
+                        <div class="input-column">
+                            <h4 class="sub-header">Sample Data (Actual)</h4>
+
+                            <div class="input-row">
+                                <label>Phosphorus (P)</label>
+                                <input type="number" id="input-p" placeholder="Value">
+                            </div>
+                            <div class="input-row">
+                                <label>Sulfur (S)</label>
+                                <input type="number" id="input-s" placeholder="Value">
+                            </div>
+                            <div class="input-row">
+                                <label>Potassium (K)</label>
+                                <input type="number" id="input-k" placeholder="Value">
+                            </div>
+                            <div class="input-row">
+                                <label>Calcium (Ca)</label>
+                                <input type="number" id="input-ca" placeholder="Value">
+                            </div>
+                            <div class="input-row">
+                                <label>pH Level</label>
+                                <input type="number" id="input-ph" step="0.1" placeholder="Value">
+                            </div>
+                            <div class="input-row">
+                                <label>EC</label>
+                                <input type="number" id="input-ec" step="0.01" placeholder="Value">
+                            </div>
+                            <div class="input-row">
+                                <label>Organic Carbon (OC)</label>
+                                <input type="number" id="input-oc" step="0.01" placeholder="Value">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="cta-btn primary full-width" onclick="runAnalysis()">Run Analysis</button>
+                </div>
+
+                <!-- C. Analytics Engine -->
+                <div class="card analytics-card">
+                    <h3>Live Analytics</h3>
+                    <div class="chart-container">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    <div id="status-indicators" class="status-grid">
+                        <!-- Dynamic Status Items -->
+                    </div>
+                </div>
+
+                <!-- D. Soil Classification -->
+                <div class="card classification-card">
+                    <h3>Classification</h3>
+                    <div id="classification-results">
+                        <p>Run analysis to see classification.</p>
+                    </div>
+                </div>
+
+                <!-- E. Suggestion Engine -->
+                <div class="card suggestion-card">
+                    <h3>AI Suggestions</h3>
+                    <div id="suggestion-content">
+                        <!-- Suggestions will appear here -->
+                    </div>
+                    <div class="suggestion-actions">
+                        <button class="small-btn" onclick="addToPlan()">Add to Plan</button>
+                        <button class="small-btn" onclick="clearPlan()">Clear Plan</button>
+                    </div>
+                    <div id="plan-display"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Results Page -->
+        <section id="results" class="page-section">
+            <h2 class="section-title">Analysis Report</h2>
+            <div class="report-container">
+                <div class="card report-summary">
+                    <h3>Summary</h3>
+                    <p id="report-summary-text">No analysis data available.</p>
+                </div>
+
+                <div class="card report-table-card">
+                    <h3>Detailed Data</h3>
+                    <table id="report-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Status</th>
+                                <th>Recommendation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card report-narrative">
+                    <h3>Full Report</h3>
+                    <div id="narrative-text"></div>
+                </div>
+
+                <button class="cta-btn primary" onclick="exportPDF()">Download PDF Report</button>
+            </div>
+        </section>
+
+        <!-- 4. Global Data Page -->
+        <section id="global-data" class="page-section">
+            <h2 class="section-title">Global Reference Dashboard</h2>
+            <div class="card global-table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nutrient</th>
+                            <th>Global Std.</th>
+                            <th>Dayalbagh Ref.</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="icon" title="Essential for root growth">🌱</span> Phosphorus (P)</td>
+                            <td>20-40 kg/ha</td>
+                            <td>25 kg/ha</td>
+                            <td>Critical for energy transfer.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="icon" title="Protein synthesis">⚛️</span> Sulfur (S)</td>
+                            <td>10-20 ppm</td>
+                            <td>12 ppm</td>
+                            <td>Key for enzyme function.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="icon" title="Water regulation">💧</span> Potassium (K)</td>
+                            <td>150-250 kg/ha</td>
+                            <td>180 kg/ha</td>
+                            <td>Regulates stomata opening.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="icon" title="Cell wall structure">🧱</span> Calcium (Ca)</td>
+                            <td>2-5 meq/100g</td>
+                            <td>3.5 meq/100g</td>
+                            <td>Structural integrity.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 5. Feedback Page -->
+        <section id="feedback" class="page-section">
+            <h2 class="section-title">Feedback</h2>
+            <div class="card feedback-card">
+                <form id="feedback-form" onsubmit="handleFeedback(event)">
+                    <div class="input-group">
+                        <label>Name</label>
+                        <input type="text" id="fb-name" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" id="fb-email" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Message</label>
+                        <textarea id="fb-message" rows="4" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="cta-btn primary">Save Feedback</button>
+                        <button type="button" class="cta-btn secondary" onclick="clearFeedback()">Clear</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Chatbot Widget -->
+    <div id="chatbot-widget">
+        <div id="chatbot-header">
+            <span>Kenchua 🪱</span>
+            <button id="close-chat">×</button>
+        </div>
+        <div id="chatbot-messages">
+            <div class="msg bot">Hello! I'm Kenchua, your soil assistant. How can I help?</div>
+        </div>
+        <div id="chatbot-input">
+            <input type="text" id="chat-input" placeholder="Ask me anything...">
+            <button id="send-chat">➤</button>
+        </div>
+    </div>
+    <button id="chatbot-toggle">💬</button>
+
+    <!-- Success Popup -->
+    <div id="success-popup" class="popup hidden">
+        <div class="popup-content">
+            <span class="checkmark">✓</span>
+            <p>Saved Successfully!</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
